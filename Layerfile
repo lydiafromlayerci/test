@@ -1,16 +1,12 @@
-#This is an example LayerCI configuration for React!
 FROM vm/ubuntu:18.04
 
-# To note: Layerfiles create entire VMs, *not* containers!
-
-RUN curl -fSsL https://deb.nodesource.com/setup_12.x | bash && \
-    apt-get install nodejs python3 make gcc build-essential
-
-# node is a memory hog
-MEMORY 2G
-ENV NODE_OPTIONS=--max-old-space-size=8192
+# Install Doppler
+RUN (curl -Ls https://cli.doppler.com/install.sh || wget -qO- https://cli.doppler.com/install.sh) | sh
 
 COPY . .
-RUN npm install
-RUN BACKGROUND npm start
 
+# Load DOPPLER_TOKEN secret from LayerCI
+SECRET ENV DOPPLER_TOKEN
+
+# Test Doppler secrets access
+RUN doppler secrets # Testing purposes only
